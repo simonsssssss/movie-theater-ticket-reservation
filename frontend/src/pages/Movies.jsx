@@ -1,7 +1,10 @@
 import '../styles/Movies.css';
 import {useEffect, useState} from "react";
+import Modal from '../components/Modal';
 
 function Movies() {
+    const [selectedMovie, setSelectedMovie] = useState(null);
+    const [isModalActive, setModalActive] = useState(false);
     const [dateIsSelected, setDateIsSelected] = useState(false);
     const [datePickerValue, setDatePickerValue] = useState(null);
     const [movies, setMovies] = useState([]);
@@ -38,6 +41,18 @@ function Movies() {
             setDatePickerValue(newDate);
         }
     };
+    const openModal = () => {
+        setModalActive(true);
+        document.body.style.overflow = 'hidden';
+    }
+    const closeModal = () => {
+        document.body.style.overflow = '';
+        setModalActive(false);
+    }
+    const handleClickForSelectedMovie = (movieId) => {
+        setSelectedMovie(movieId);
+        openModal();
+    }
     return (
         <div className="movie-showtimes">
             {
@@ -59,7 +74,7 @@ function Movies() {
                                     <div className="box" id="movies-list-item" key={index}>
                                         <div className="grid">
                                             <div className="cell" id="movies-list-item-image">
-                                                <div className="movies-list-item-image-wrapper">
+                                                <div className="movies-list-item-image-wrapper" onClick={() => handleClickForSelectedMovie(movie.id)}>
                                                     <img src={movie.movie_image_url} id="movies-list-item-image-img" alt="Movie Poster" />
                                                     <div className="movies-list-item-image-overlay">
                                                         <i className="fa-solid fa-circle-play" id="movies-list-item-image-overlay-i"></i>
@@ -78,12 +93,20 @@ function Movies() {
                             }
                         </div>
                     ) : (
-                        <div className="tag is-white" id="no-date-selected-info">No movies for selected date</div>
+                        <div className="tag is-white" id="no-date-selected-info">No showtimes for selected date</div>
                     )
                 ) : (
                     <div className="tag is-white" id="no-date-selected-info">No date selected</div>
                 )
             }
+            <Modal isActive={isModalActive} closeModal={closeModal}>
+                <iframe
+                    title="Movie Trailer"
+                    width="897"
+                    height="505"
+                    src={Array.from(movies).find(movie => movie.id === selectedMovie)?.trailer_embed_url || ''}>
+                </iframe>
+            </Modal>
         </div>
     );
 }

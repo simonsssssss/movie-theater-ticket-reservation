@@ -93,3 +93,11 @@
     font-size: 80px;
     color: white;
 }
+
+.modal-background {
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.modal-content {
+    width: 900px;
+}
